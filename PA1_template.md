@@ -1,16 +1,12 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
 1. Load the data
 2. Process the data into a format suitable for your analysis
-```{r}
+
+```r
 #This function loads the data into a dataframe, and adds a factor column for the intervals values
 loadActivityDF = function(){
   if (!exists("activityDF"))
@@ -32,7 +28,8 @@ loadActivityDF = function(){
 
 ## What is mean total number of steps taken per day?
 1. Make a histogram of the total number of steps taken each day
-```{r}
+
+```r
 #This function aggregates the step data into a "per day" step count, and creates (and saves) a histogram of the resulting data.
 summarizeSteps = function(dataset, fileName){
   summarySteps = aggregate(steps~date, data=dataset, sum, na.rm=TRUE)
@@ -41,13 +38,13 @@ summarizeSteps = function(dataset, fileName){
   dev.off()
   summarySteps
 }
-
 ```
 
 ![Histogram of initial step counts](figures/rawHistogram.png)
 
 2. Calculate and report the __mean__ and __median__ total number of steps taken per day
-```{r}
+
+```r
 #This function calculates the mean number of steps taken per day
 meanDailySteps = function(dataset){
   
@@ -68,7 +65,8 @@ medianDailySteps = function(dataset){
 
 ## What is the average daily activity pattern?
 1.  Make a time series plot of the 5-minute interval(x-axis) and the average number of steps taken, averaged across all days (y-axis)
-```{r}
+
+```r
 #This function calculates the mean number of steps for each time interval, across all days in the study.  It then produces (and saves) a line plot of the data
 plotIntervalSteps = function(dataset, fileName){
   meanIntervalSteps = aggregate(steps~intervals, data=dataset, mean, na.rm=TRUE)
@@ -88,7 +86,8 @@ plotIntervalSteps = function(dataset, fileName){
 ![Graph of average number of steps taken in a time period, across all days](figures/intervalSteps.png)
 
 2. Which 5 minute interval, on average across all the days in the database, contains the maximum number of steps?
-```{r}
+
+```r
 #This function calculates the time interval that has the highest average step count, across all days of the study
 maxIntervalSteps = function(dataset){
   sortedIntervalSteps = dataset[order(dataset$steps, decreasing = TRUE), ]
@@ -100,7 +99,8 @@ _The 5-minute interval corresponding to the highest average number of steps is 8
 
 ## Imputing missing values
 1. Calculate and report the total number of missing values (coded as NA)
-```{r}
+
+```r
 #This function calculates the number of missing step values (i.e. "NA" in source data) across all days and intervals in the study
 calculateMissingData = function(dataset){
   dim(dataset[is.na(dataset$steps), ])[1]
@@ -112,7 +112,8 @@ There are 2304 rows with a missing step count
 _For this assignment, the mean step value (over all days of the study) for intervals that were missing data was used to imput a value._
 
 3. Create a new dataset that is equal to the original dataset but with the missing values filled in
-```{r}
+
+```r
 #This function will imput the mean step count for a given interval in all cases where a step count is missing.  
 #This value was chosen as the best way to reduce the calculation bias.  
 #This function also calculates the day type (Weekend or Weekday) of each day in the study for
@@ -130,11 +131,11 @@ imputMissingData = function(dataset, intervalDF){
   
   completeData
 }
-
 ```
 
 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps? 
-```{r}
+
+```r
 #This function aggregates the step data into a "per day" step count, and creates (and saves) a histogram of the resulting data.
 summarizeSteps = function(dataset, fileName){
   summarySteps = aggregate(steps~date, data=dataset, sum, na.rm=TRUE)
@@ -154,7 +155,8 @@ Using the same meanDailySteps and medianDailySteps functions on the completed da
 _See Item 3 above_
 
 2.  Make a panel plot containing a time series plot (i.e.  type = "l" ) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
-```{r}
+
+```r
 #This function calculates the mean number of steps based on the intervals and day type (weekday or weekend)
 #The resulting data is plotted (and saved) in a two panel line graph to show the difference
 plotDayType = function(dataset, fileName){
@@ -175,9 +177,24 @@ plotDayType = function(dataset, fileName){
 ![Two panel graph of weekday and weekend mean interval step counts](figures/intervalStepsByDayType.png)
 
 ##Code used to process the above functions
-```{r}
+
+```r
 message("Starting processing")
+```
+
+```
+## Starting processing
+```
+
+```r
 activityDF = loadActivityDF()
+```
+
+```
+## Loading new data table
+```
+
+```r
 summaryDF = summarizeSteps(activityDF, "rawHistogram")
 meanSteps = meanDailySteps(summaryDF)
 medianSteps = medianDailySteps(summaryDF)
@@ -189,5 +206,17 @@ completeSummaryDF = summarizeSteps(completeDataDF, "completeHistogram")
 meanCompleteSteps = meanDailySteps(completeSummaryDF)
 medianCompleteSteps = medianDailySteps(completeSummaryDF)
 plotDayType(completeDataDF, "intervalStepsByDayType")
+```
+
+```
+## png 
+##   2
+```
+
+```r
 message("Processing complete")
+```
+
+```
+## Processing complete
 ```
